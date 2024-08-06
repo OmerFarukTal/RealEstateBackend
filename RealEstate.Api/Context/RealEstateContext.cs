@@ -10,6 +10,7 @@ namespace RealEstate.Api.Context
         public RealEstateContext(DbContextOptions<RealEstateContext> options) : base(options) { 
         }
 
+        public DbSet<Images> Images { get; set; }
         public DbSet<Currencies> Currencies { get; set; }
         public DbSet<Properties> Properties { get; set; }
         public DbSet<PropertyStatuses> PropertyStatuses { get; set; }
@@ -17,8 +18,7 @@ namespace RealEstate.Api.Context
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Translations> Translations { get; set; }
         public DbSet<Users> Users { get; set; }
-
-
+        
 
     }
 }

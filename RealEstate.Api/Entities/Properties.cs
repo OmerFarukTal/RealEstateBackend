@@ -17,7 +17,7 @@
         public int CurrencyId { get; set; }
         public Currencies Currency { get; set; }
 
-        public string Photo {  get; set; }
+        public ICollection<Images> Images {  get; set; }
 
         public int CreatorId { get; set; }
         public Users CreatorUser { get; set; }

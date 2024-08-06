@@ -12,8 +12,8 @@ using RealEstate.Api.Context;
 namespace RealEstate.Api.Migrations
 {
     [DbContext(typeof(RealEstateContext))]
-    [Migration("20240805083357_IdentityUser")]
-    partial class IdentityUser
+    [Migration("20240806073641_ImageEntity")]
+    partial class ImageEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,11 +89,6 @@ namespace RealEstate.Api.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -145,10 +140,6 @@ namespace RealEstate.Api.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator().HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -256,6 +247,34 @@ namespace RealEstate.Api.Migrations
                     b.ToTable("Currencies");
                 });
 
+            modelBuilder.Entity("RealEstate.Api.Entities.Images", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("PropertiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertiesId");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("RealEstate.Api.Entities.Properties", b =>
                 {
                     b.Property<int>("Id")
@@ -270,8 +289,8 @@ namespace RealEstate.Api.Migrations
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CreatorUserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CreatorUserId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CurrencyId")
                         .HasColumnType("int");
@@ -281,10 +300,6 @@ namespace RealEstate.Api.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Photo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -407,9 +422,35 @@ namespace RealEstate.Api.Migrations
 
             modelBuilder.Entity("RealEstate.Api.Entities.Users", b =>
                 {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasDiscriminator().HasValue("Users");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -463,11 +504,20 @@ namespace RealEstate.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RealEstate.Api.Entities.Images", b =>
+                {
+                    b.HasOne("RealEstate.Api.Entities.Properties", null)
+                        .WithMany("Images")
+                        .HasForeignKey("PropertiesId");
+                });
+
             modelBuilder.Entity("RealEstate.Api.Entities.Properties", b =>
                 {
                     b.HasOne("RealEstate.Api.Entities.Users", "CreatorUser")
                         .WithMany("Properties")
-                        .HasForeignKey("CreatorUserId");
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RealEstate.Api.Entities.Currencies", "Currency")
                         .WithMany()
@@ -494,6 +544,22 @@ namespace RealEstate.Api.Migrations
                     b.Navigation("PropertyStatus");
 
                     b.Navigation("PropertyType");
+                });
+
+            modelBuilder.Entity("RealEstate.Api.Entities.Users", b =>
+                {
+                    b.HasOne("RealEstate.Api.Entities.Roles", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("RealEstate.Api.Entities.Properties", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("RealEstate.Api.Entities.Users", b =>
