@@ -7,6 +7,7 @@ namespace RealEstate.Api.DTO.CurrencyDTO
         public string Name { get; set; }
         public string Code { get; set; }
 
+
         public Currencies ToCurrency()
         {
             return new Currencies()

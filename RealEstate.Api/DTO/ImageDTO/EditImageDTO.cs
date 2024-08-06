@@ -1,12 +1,10 @@
-﻿namespace RealEstate.Api.Entities
+﻿namespace RealEstate.Api.DTO.ImageDTO
 {
-    public class Images : BaseEntity
+    public class EditImageDTO
     {
-
+        public int Id { get; set; }
         public int PropertyId { get; set; }
-        public Properties Property { get; set; }
         public string Source { get; set; }
         public string Name { get; set; }
-
     }
 }

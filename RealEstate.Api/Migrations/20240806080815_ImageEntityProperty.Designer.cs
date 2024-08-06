@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RealEstate.Api.Context;
 
@@ -11,9 +12,11 @@ using RealEstate.Api.Context;
 namespace RealEstate.Api.Migrations
 {
     [DbContext(typeof(RealEstateContext))]
-    partial class RealEstateContextModelSnapshot : ModelSnapshot
+    [Migration("20240806080815_ImageEntityProperty")]
+    partial class ImageEntityProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -299,10 +302,6 @@ namespace RealEstate.Api.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
@@ -532,13 +531,13 @@ namespace RealEstate.Api.Migrations
                         .IsRequired();
 
                     b.HasOne("RealEstate.Api.Entities.PropertyStatuses", "PropertyStatus")
-                        .WithMany("Properties")
+                        .WithMany()
                         .HasForeignKey("PropertyStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RealEstate.Api.Entities.PropertyTypes", "PropertyType")
-                        .WithMany("Properties")
+                        .WithMany()
                         .HasForeignKey("PropertyTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -566,16 +565,6 @@ namespace RealEstate.Api.Migrations
             modelBuilder.Entity("RealEstate.Api.Entities.Properties", b =>
                 {
                     b.Navigation("Images");
-                });
-
-            modelBuilder.Entity("RealEstate.Api.Entities.PropertyStatuses", b =>
-                {
-                    b.Navigation("Properties");
-                });
-
-            modelBuilder.Entity("RealEstate.Api.Entities.PropertyTypes", b =>
-                {
-                    b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("RealEstate.Api.Entities.Users", b =>
