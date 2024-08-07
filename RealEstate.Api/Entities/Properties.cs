@@ -20,9 +20,9 @@
         public ICollection<Images> Images {  get; set; }
 
         public int CreatorId { get; set; }
-        public Users CreatorUser { get; set; }
+        public Users Creator { get; set; }
 
-        public int UpdatorId { get; set; }
+        public ICollection<UpdateProperty> UpdateProperties { get; set; }
 
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }

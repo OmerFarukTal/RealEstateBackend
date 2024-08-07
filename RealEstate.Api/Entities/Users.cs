@@ -13,5 +13,7 @@ namespace RealEstate.Api.Entities
         public string Email { get; set; }
 
         public ICollection<Properties> Properties { get; set; }
+
+        public ICollection<UpdateProperty> UpdateProperties { get; set; }
     }
 }

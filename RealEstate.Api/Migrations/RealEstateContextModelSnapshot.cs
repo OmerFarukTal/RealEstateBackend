@@ -287,9 +287,6 @@ namespace RealEstate.Api.Migrations
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CreatorUserId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CurrencyId")
                         .HasColumnType("int");
 
@@ -318,12 +315,9 @@ namespace RealEstate.Api.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UpdatorId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatorUserId");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("CurrencyId");
 
@@ -420,6 +414,45 @@ namespace RealEstate.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Translations");
+                });
+
+            modelBuilder.Entity("RealEstate.Api.Entities.UpdateProperty", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("PropertiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdateReason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UpdatorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertiesId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("UpdateProperties");
                 });
 
             modelBuilder.Entity("RealEstate.Api.Entities.Users", b =>
@@ -519,9 +552,9 @@ namespace RealEstate.Api.Migrations
 
             modelBuilder.Entity("RealEstate.Api.Entities.Properties", b =>
                 {
-                    b.HasOne("RealEstate.Api.Entities.Users", "CreatorUser")
+                    b.HasOne("RealEstate.Api.Entities.Users", "Creator")
                         .WithMany("Properties")
-                        .HasForeignKey("CreatorUserId")
+                        .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -543,13 +576,24 @@ namespace RealEstate.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CreatorUser");
+                    b.Navigation("Creator");
 
                     b.Navigation("Currency");
 
                     b.Navigation("PropertyStatus");
 
                     b.Navigation("PropertyType");
+                });
+
+            modelBuilder.Entity("RealEstate.Api.Entities.UpdateProperty", b =>
+                {
+                    b.HasOne("RealEstate.Api.Entities.Properties", null)
+                        .WithMany("UpdateProperties")
+                        .HasForeignKey("PropertiesId");
+
+                    b.HasOne("RealEstate.Api.Entities.Users", null)
+                        .WithMany("UpdateProperties")
+                        .HasForeignKey("UsersId");
                 });
 
             modelBuilder.Entity("RealEstate.Api.Entities.Users", b =>
@@ -566,6 +610,8 @@ namespace RealEstate.Api.Migrations
             modelBuilder.Entity("RealEstate.Api.Entities.Properties", b =>
                 {
                     b.Navigation("Images");
+
+                    b.Navigation("UpdateProperties");
                 });
 
             modelBuilder.Entity("RealEstate.Api.Entities.PropertyStatuses", b =>
@@ -581,6 +627,8 @@ namespace RealEstate.Api.Migrations
             modelBuilder.Entity("RealEstate.Api.Entities.Users", b =>
                 {
                     b.Navigation("Properties");
+
+                    b.Navigation("UpdateProperties");
                 });
 #pragma warning restore 612, 618
         }

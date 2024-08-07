@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RealEstate.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class ImageEntity : Migration
+    public partial class TableReInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -258,6 +258,7 @@ namespace RealEstate.Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PropertyTypeId = table.Column<int>(type: "int", nullable: false),
                     PropertyStatusId = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -265,8 +266,6 @@ namespace RealEstate.Api.Migrations
                     Price = table.Column<double>(type: "float", nullable: false),
                     CurrencyId = table.Column<int>(type: "int", nullable: false),
                     CreatorId = table.Column<int>(type: "int", nullable: false),
-                    CreatorUserId = table.Column<int>(type: "int", nullable: false),
-                    UpdatorId = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -293,8 +292,8 @@ namespace RealEstate.Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Properties_Users_CreatorUserId",
-                        column: x => x.CreatorUserId,
+                        name: "FK_Properties_Users_CreatorId",
+                        column: x => x.CreatorId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -308,16 +307,46 @@ namespace RealEstate.Api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
                     Source = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PropertiesId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Images", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Images_Properties_PropertiesId",
+                        name: "FK_Images_Properties_PropertyId",
+                        column: x => x.PropertyId,
+                        principalTable: "Properties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UpdateProperties",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PropertyId = table.Column<int>(type: "int", nullable: false),
+                    UpdatorId = table.Column<int>(type: "int", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdateReason = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PropertiesId = table.Column<int>(type: "int", nullable: true),
+                    UsersId = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UpdateProperties", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UpdateProperties_Properties_PropertiesId",
                         column: x => x.PropertiesId,
                         principalTable: "Properties",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UpdateProperties_Users_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -361,14 +390,14 @@ namespace RealEstate.Api.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Images_PropertiesId",
+                name: "IX_Images_PropertyId",
                 table: "Images",
-                column: "PropertiesId");
+                column: "PropertyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Properties_CreatorUserId",
+                name: "IX_Properties_CreatorId",
                 table: "Properties",
-                column: "CreatorUserId");
+                column: "CreatorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Properties_CurrencyId",
@@ -384,6 +413,16 @@ namespace RealEstate.Api.Migrations
                 name: "IX_Properties_PropertyTypeId",
                 table: "Properties",
                 column: "PropertyTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UpdateProperties_PropertiesId",
+                table: "UpdateProperties",
+                column: "PropertiesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UpdateProperties_UsersId",
+                table: "UpdateProperties",
+                column: "UsersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
@@ -414,6 +453,9 @@ namespace RealEstate.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Translations");
+
+            migrationBuilder.DropTable(
+                name: "UpdateProperties");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -18,7 +18,7 @@ namespace RealEstate.Api.Context
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Translations> Translations { get; set; }
         public DbSet<Users> Users { get; set; }
-        
+        public DbSet<UpdateProperty> UpdateProperties { get; set; }
 
     }
 }
