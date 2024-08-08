@@ -20,7 +20,6 @@ namespace RealEstate.Api.DTO.PropertyDTO
         public string CreatorName { get; set; }
 
         public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
 
         public static PropertyInfoDTO FromProperty(Properties property) 
         {
@@ -36,7 +35,6 @@ namespace RealEstate.Api.DTO.PropertyDTO
                 CurrencyName = property.Currency.Name,
                 CreatorName = property.Creator.UserName,
                 CreatedDate = property.CreatedDate,
-                UpdatedDate = property.UpdatedDate,
             };
         }
 

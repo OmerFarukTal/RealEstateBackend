@@ -12,7 +12,7 @@ using RealEstate.Api.Context;
 namespace RealEstate.Api.Migrations
 {
     [DbContext(typeof(RealEstateContext))]
-    [Migration("20240807141739_TableReInit")]
+    [Migration("20240808111340_TableReInit")]
     partial class TableReInit
     {
         /// <inheritdoc />
@@ -313,9 +313,6 @@ namespace RealEstate.Api.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");

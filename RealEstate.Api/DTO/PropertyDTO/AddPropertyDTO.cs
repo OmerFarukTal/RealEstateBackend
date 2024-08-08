@@ -20,7 +20,6 @@ namespace RealEstate.Api.DTO.PropertyDTO
 
 
         public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
 
         public Properties ToProperty()
         {
@@ -35,7 +34,6 @@ namespace RealEstate.Api.DTO.PropertyDTO
                 CurrencyId = CurrencyId,
                 CreatorId = CreatorId,
                 CreatedDate = CreatedDate,
-                UpdatedDate = UpdatedDate,
 
             };
         }
