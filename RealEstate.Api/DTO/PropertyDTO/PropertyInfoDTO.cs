@@ -6,6 +6,7 @@ namespace RealEstate.Api.DTO.PropertyDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
 
         public string PropertyTypeName { get; set; }
         public string PropertyStatusName { get; set; }
@@ -27,6 +28,7 @@ namespace RealEstate.Api.DTO.PropertyDTO
             {
                 Id = property.Id,
                 Name = property.Name,
+                Description = property.Description,
                 PropertyTypeName = property.PropertyType.Name,
                 PropertyStatusName = property.PropertyStatus.Name,
                 StartDate = property.StartDate,

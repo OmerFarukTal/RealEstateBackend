@@ -4,6 +4,7 @@ namespace RealEstate.Api.DTO.UserDTO
 {
     public class UserInfoDTO
     {
+        public int Id { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public string RoleName { get; set; }
@@ -14,6 +15,7 @@ namespace RealEstate.Api.DTO.UserDTO
 
             return new UserInfoDTO
             {
+                Id = user.Id,
                 UserName = user.UserName,
                 Password = user.Password,
                 RoleName = user.Role.Name,

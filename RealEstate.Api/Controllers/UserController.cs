@@ -53,7 +53,7 @@ namespace RealEstate.Api.Controllers
             string hashedPassword = builder.ToString();
 
             if (!user.Password.Equals(hashedPassword)) return BadRequest();
-            return Ok();
+            return Ok(UserInfoDTO.FromUser(user));
         }
 
         [HttpGet]

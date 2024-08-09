@@ -5,6 +5,7 @@ namespace RealEstate.Api.DTO.PropertyDTO
     public class AddPropertyDTO
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public int PropertyTypeId { get; set; }
 
         public int PropertyStatusId { get; set; }
@@ -26,6 +27,7 @@ namespace RealEstate.Api.DTO.PropertyDTO
             return new Properties()
             {
                 Name = Name,
+                Description = Description,
                 PropertyTypeId = PropertyTypeId,
                 PropertyStatusId = PropertyStatusId,
                 StartDate = StartDate,
