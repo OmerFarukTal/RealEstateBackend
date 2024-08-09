@@ -48,6 +48,25 @@ namespace RealEstate.Api.Controllers
         }
 
         [HttpGet]
+        [Route("page")]
+        public IActionResult GetPropertyPage(int page, int pageSize)
+        {
+            var properties = context.Properties.Include(a => a.PropertyType)
+                                       .Include(a => a.PropertyStatus)
+                                       .Include(a => a.Creator)
+                                       .Include(a => a.Currency)
+                                       .Where(x => !x.IsDeleted)
+                                       .Skip((page - 1) * pageSize)
+                                       .Take(pageSize)
+                                       .ToList();
+
+            if (!properties.Any()) return NotFound();
+
+            var propertyDtos = properties.Select(PropertyInfoDTO.FromProperty).ToList();
+            return Ok(propertyDtos);
+        }
+
+        [HttpGet]
         [Route("list")]
         public IActionResult GetAll()
         {

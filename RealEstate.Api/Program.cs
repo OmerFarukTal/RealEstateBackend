@@ -37,7 +37,7 @@ namespace RealEstate.Api
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-
+            /*
             builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
                 .AddNegotiate();
 
@@ -45,7 +45,7 @@ namespace RealEstate.Api
             {
                 // By default, all incoming requests will be authorized according to the default policy.
                 options.FallbackPolicy = options.DefaultPolicy;
-            });
+            });*/
 
 
 
