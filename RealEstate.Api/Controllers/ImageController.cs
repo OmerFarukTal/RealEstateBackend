@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RealEstate.Api.Context;
 using RealEstate.Api.DTO.ImageDTO;
 
@@ -21,7 +22,9 @@ namespace RealEstate.Api.Controllers
             var response = context.Images.Add(addImageDTO.ToImage());
             context.SaveChanges();
 
-            return Ok(ImageInfoDTO.FromImage(response.Entity));
+            var image = context.Images.Include(a => a.Property).FirstOrDefault(x => x.Id == response.Entity.Id && !x.IsDeleted);
+
+            return Ok(ImageInfoDTO.FromImage(image));
         }
 
 
@@ -48,7 +51,7 @@ namespace RealEstate.Api.Controllers
         [HttpGet]
         public IActionResult GetTranslation(int id)
         {
-            var image = context.Images.FirstOrDefault(x => x.Id == id && !x.IsDeleted);
+            var image = context.Images.Include(a => a.Property).FirstOrDefault(x => x.Id == id && !x.IsDeleted);
             if (image == null) return NotFound(new { message = "This image does not exist" });
 
             return Ok(ImageInfoDTO.FromImage(image));
@@ -70,7 +73,7 @@ namespace RealEstate.Api.Controllers
         [Route("list")]
         public IActionResult GetAll()
         {
-            var image = context.Images.ToList();
+            var image = context.Images.Include(a => a.Property).ToList();
             if (image == null) return NotFound();
 
             List<ImageInfoDTO> listDTO = new List<ImageInfoDTO>();
