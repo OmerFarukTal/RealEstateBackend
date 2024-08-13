@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RealEstate.Api.Context;
 using RealEstate.Api.DTO.ImageDTO;
+using RealEstate.Api.Entities;
 
 namespace RealEstate.Api.Controllers
 {
@@ -25,6 +26,39 @@ namespace RealEstate.Api.Controllers
             var image = context.Images.Include(a => a.Property).FirstOrDefault(x => x.Id == response.Entity.Id && !x.IsDeleted);
 
             return Ok(ImageInfoDTO.FromImage(image));
+        }
+
+        [HttpPost]
+        [Route("upload")]
+        public IActionResult AddCurrecy(int propertyId, IFormFile image)
+        {
+            var directoryPath = Path.Combine("wwwroot", "images");
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            var filePath = Path.Combine(directoryPath, image.FileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                image.CopyTo(stream);
+            }
+
+            var imageUrl = $"/images/{image.FileName}";
+
+            Images imageEntity = new Images()
+            {
+                Name = "string",
+                Source = imageUrl,
+                PropertyId = propertyId,
+            };
+
+            context.Images.Add(imageEntity);
+            context.SaveChanges();
+
+            return Ok(ImageInfoDTO.FromImage(imageEntity));
+
         }
 
 

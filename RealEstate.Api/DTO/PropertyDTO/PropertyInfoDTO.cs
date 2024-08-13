@@ -22,7 +22,6 @@ namespace RealEstate.Api.DTO.PropertyDTO
 
         public DateTime CreatedDate { get; set; }
 
-        public ICollection<Images> Images { get; set; }
 
         public static PropertyInfoDTO FromProperty(Properties property) 
         {
@@ -39,7 +38,6 @@ namespace RealEstate.Api.DTO.PropertyDTO
                 CurrencyName = property.Currency.Name,
                 CreatorName = property.Creator.UserName,
                 CreatedDate = property.CreatedDate,
-                Images = property.Images,
             };
         }
 

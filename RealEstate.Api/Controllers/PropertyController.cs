@@ -28,7 +28,6 @@ namespace RealEstate.Api.Controllers
                                              .Include(a => a.PropertyStatus)
                                              .Include(a => a.Creator)
                                              .Include(a => a.Currency)
-                                             .Include(a => a.Images)
                                              .FirstOrDefault(x => x.Id == response.Entity.Id  && !x.IsDeleted);
 
             return Ok(PropertyInfoDTO.FromProperty(property));
@@ -41,7 +40,6 @@ namespace RealEstate.Api.Controllers
                                              .Include(a => a.PropertyStatus)
                                              .Include(a => a.Creator)
                                              .Include(a => a.Currency)
-                                             .Include(a => a.Images)
                                              .FirstOrDefault(x => x.Id == id && !x.IsDeleted);
             if (property == null) return NotFound();
 
@@ -57,7 +55,6 @@ namespace RealEstate.Api.Controllers
                                        .Include(a => a.PropertyStatus)
                                        .Include(a => a.Creator)
                                        .Include(a => a.Currency)
-                                       .Include(a => a.Images)
                                        .Where(x => !x.IsDeleted)
                                        .Skip((page - 1) * pageSize)
                                        .Take(pageSize)
@@ -77,7 +74,6 @@ namespace RealEstate.Api.Controllers
                                              .Include(a => a.PropertyStatus)
                                              .Include(a => a.Creator)
                                              .Include(a => a.Currency)
-                                             .Include(a => a.Images)
                                              .ToList();
             if (property == null) return NotFound();
 
