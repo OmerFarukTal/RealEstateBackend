@@ -2,7 +2,7 @@
 
 namespace RealEstate.Api.DTO.PropertyDTO
 {
-    public class PropertyInfoDTO
+    public class RawPropertyInfoDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,24 +13,24 @@ namespace RealEstate.Api.DTO.PropertyDTO
 
         public string Description { get; set; }
 
-        public string PropertyTypeName { get; set; }
-        public string PropertyStatusName { get; set; }
+        public int PropertyTypeId { get; set; }
+        public int PropertyStatusId { get; set; }
 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
         public double Price { get; set; }
 
-        public string CurrencyName { get; set; }
+        public int CurrencyId { get; set; }
 
-        public string CreatorName { get; set; }
+        public int CreatorId { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
 
-        public static PropertyInfoDTO FromProperty(Properties property) 
+        public static RawPropertyInfoDTO FromProperty(Properties property)
         {
-            return new PropertyInfoDTO()
+            return new RawPropertyInfoDTO()
             {
                 Id = property.Id,
                 Name = property.Name,
@@ -38,13 +38,13 @@ namespace RealEstate.Api.DTO.PropertyDTO
                 Latitude = property.Latitude,
                 Longitude = property.Longitude,
                 Description = property.Description,
-                PropertyTypeName = property.PropertyType.Name,
-                PropertyStatusName = property.PropertyStatus.Name,
+                PropertyTypeId = property.PropertyType.Id,
+                PropertyStatusId = property.PropertyStatus.Id,
                 StartDate = property.StartDate,
                 EndDate = property.EndDate,
                 Price = property.Price,
-                CurrencyName = property.Currency.Name,
-                CreatorName = property.Creator.UserName,
+                CurrencyId = property.Currency.Id,
+                CreatorId = property.Creator.Id,
                 CreatedDate = property.CreatedDate,
             };
         }

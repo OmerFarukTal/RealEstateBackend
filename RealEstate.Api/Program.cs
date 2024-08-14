@@ -67,6 +67,8 @@ namespace RealEstate.Api
 
             app.MapControllers();
 
+            app.UseStaticFiles();
+
             app.Run();
         }
     }

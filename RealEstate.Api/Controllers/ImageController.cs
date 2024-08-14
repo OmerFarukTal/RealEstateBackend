@@ -30,36 +30,43 @@ namespace RealEstate.Api.Controllers
 
         [HttpPost]
         [Route("upload")]
-        public IActionResult AddCurrecy(int propertyId, IFormFile image)
+        public IActionResult UploadImageFile([FromBody] AddImageDTO addImageDTO)
         {
+            if (string.IsNullOrEmpty(addImageDTO.Source))
+                return BadRequest("The image field is required.");
+
+            // Decode the Base64 string
+            var base64Parts = addImageDTO.Source.Split(',');
+            var imageData = Convert.FromBase64String(base64Parts.Length > 1 ? base64Parts[1] : base64Parts[0]);
+
             var directoryPath = Path.Combine("wwwroot", "images");
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
             }
 
-            var filePath = Path.Combine(directoryPath, image.FileName);
+            var uniqueFileName = Guid.NewGuid().ToString() + ".jpg"; // Or use appropriate extension
+            var filePath = Path.Combine(directoryPath, uniqueFileName);
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                image.CopyTo(stream);
-            }
+            System.IO.File.WriteAllBytes(filePath, imageData);
 
-            var imageUrl = $"/images/{image.FileName}";
+            var imageUrl = $"/images/{uniqueFileName}";
 
             Images imageEntity = new Images()
             {
-                Name = "string",
+                Name = addImageDTO.Name,
                 Source = imageUrl,
-                PropertyId = propertyId,
+                PropertyId = addImageDTO.PropertyId,
             };
 
-            context.Images.Add(imageEntity);
+            var response = context.Images.Add(imageEntity);
             context.SaveChanges();
 
-            return Ok(ImageInfoDTO.FromImage(imageEntity));
+            var returnedImage = context.Images.Include(a => a.Property).FirstOrDefault(x => x.Id == response.Entity.Id);
 
+            return Ok(ImageInfoDTO.FromImage(returnedImage));
         }
+
 
 
         [HttpPut]

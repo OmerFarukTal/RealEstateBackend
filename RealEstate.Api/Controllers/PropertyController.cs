@@ -33,6 +33,17 @@ namespace RealEstate.Api.Controllers
             return Ok(PropertyInfoDTO.FromProperty(property));
         }
 
+        [HttpDelete]
+        public IActionResult DeleteProperty(int id)
+        {
+            var property = context.Properties.FirstOrDefault(x => x.Id == id && !x.IsDeleted);
+
+            property.IsDeleted = true;
+            context.SaveChanges();
+
+            return Ok();
+        }
+
         [HttpGet]
         public IActionResult GetProperty(int id)
         {   
@@ -46,6 +57,52 @@ namespace RealEstate.Api.Controllers
 
             return Ok(PropertyInfoDTO.FromProperty(property));
         }
+
+        [HttpGet]
+        [Route("raw")]
+        public IActionResult GetRawProperty(int id)
+        {
+            var property = context.Properties.Include(a => a.PropertyType)
+                                             .Include(a => a.PropertyStatus)
+                                             .Include(a => a.Creator)
+                                             .Include(a => a.Currency)
+                                             .FirstOrDefault(x => x.Id == id && !x.IsDeleted);
+            if (property == null) return NotFound();
+
+
+            return Ok(RawPropertyInfoDTO.FromProperty(property));
+        }
+
+        [HttpPut]
+        public IActionResult PutProperty(EditPropertyDTO editPropertyDTO)
+        {
+            var property = context.Properties.Include(a => a.PropertyType)
+                                             .Include(a => a.PropertyStatus)
+                                             .Include(a => a.Creator)
+                                             .Include(a => a.Currency)
+                                             .FirstOrDefault(x => x.Id == editPropertyDTO.Id && !x.IsDeleted);
+            if (property == null) return NotFound();
+
+            property.Name = editPropertyDTO.Name;
+            property.Description = editPropertyDTO.Description;
+            property.Adress = editPropertyDTO.Adress;
+            property.Latitude = editPropertyDTO.Latitude;
+            property.Longitude = editPropertyDTO.Longitude;
+            property.PropertyStatusId = editPropertyDTO.PropertyStatusId;
+            property.PropertyTypeId = editPropertyDTO.PropertyTypeId;
+            property.StartDate = editPropertyDTO.StartDate;
+            property.EndDate = editPropertyDTO.EndDate;
+            property.Price = editPropertyDTO.Price;
+            property.CurrencyId = editPropertyDTO.CurrencyId;
+            property.CreatorId = editPropertyDTO.CreatorId;
+            property.CreatedDate = editPropertyDTO.CreatedDate;
+            context.SaveChanges();
+
+            return Ok(PropertyInfoDTO.FromProperty(property));
+        }
+
+
+
 
         [HttpGet]
         [Route("page")]
