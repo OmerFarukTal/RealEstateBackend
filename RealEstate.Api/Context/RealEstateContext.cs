@@ -20,5 +20,7 @@ namespace RealEstate.Api.Context
         public DbSet<Users> Users { get; set; }
         public DbSet<UpdateProperty> UpdateProperties { get; set; }
 
+        public DbSet<AdminCredential> AdminCredential { get; set; }
+
     }
 }
